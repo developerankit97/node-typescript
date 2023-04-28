@@ -7,15 +7,16 @@ router.get("/", (req, res) => {
     res.status(200).json({ todos: todos });
 });
 router.post('/todo', (req, res) => {
+    const { title } = req.body;
     const todo = {
         id: new Date().toISOString(),
-        title: req.body.title
+        title: title
     };
     todos.push(todo);
     res.status(201).json({ todo: todo });
 });
-router.post('/todos/delete/:id', (req, res) => {
-    const id = req.params.id;
+router.delete('/todos/delete/:id', (req, res) => {
+    const { id } = req.params;
     const index = todos.findIndex(todo => todo.id === id);
     if (index === -1) {
         return res.status(404).json({ message: 'Todo not found' });
@@ -23,13 +24,14 @@ router.post('/todos/delete/:id', (req, res) => {
     todos.splice(index, 1);
     res.status(200).json({ todo: todos });
 });
-router.post('/todos/edit/:id', (req, res) => {
+router.put('/todos/edit/:id', (req, res) => {
+    const { title } = req.body;
     const id = req.params.id;
     const index = todos.findIndex(todo => todo.id === id);
     if (index === -1) {
         return res.status(404).json({ message: 'Todo not found' });
     }
-    todos[index].title = req.body.title;
+    todos[index].title = title;
     res.status(200).json({ todo: todos });
 });
 exports.default = router;
